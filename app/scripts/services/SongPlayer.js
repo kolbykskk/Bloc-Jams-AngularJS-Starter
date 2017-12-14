@@ -2,6 +2,11 @@
   function SongPlayer(){
     var SongPlayer = {};
 
+    /**
+    * @desc Current album song
+    * @type {Object}
+    */
+
     var currentSong = null;
 
     /**
@@ -31,18 +36,39 @@
     currentSong = song;
       }
 
+    /**
+    * @function playSong
+    * @desc Plays the song that is passed in and sets playing to true
+    * @param {Object} song
+    */
+
+    var playSong = function(song) {
+      currentBuzzObject.play();
+      song.playing = true;
+    }
+
+    /**
+    * @function SongPlayer.play
+    * @desc If song is not playing run setSong(song) and playSong(song) otherwise if paused, run playSong(song)
+    * @param {Object} song
+    */
+
     SongPlayer.play = function(song) {
       if(currentSong !== song) {
         setSong(song);
-        currentBuzzObject.play();
-        song.playing = true;
+        playSong(song);
       } else if(currentSong === song) {
           if(currentBuzzObject.isPaused()) {
-            currentBuzzObject.play();
-            song.playing = true;
+            playSong(song);
           }
         }
     };
+
+    /**
+    * @function SongPlayer.pause
+    * @desc Pause the song using buzz and set playing to false
+    * @param {Object} song
+    */
 
     SongPlayer.pause = function(song) {
       currentBuzzObject.pause();
