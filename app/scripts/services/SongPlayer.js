@@ -19,23 +19,33 @@
 
     /**
     * @function setSong
-    * @desc Stops currently playing song and loads new audio file as currentBuzzObject
+    * @desc Sets the current song as SongPlayer.currentSong from Buzz
     * @param {Object} song
     */
 
     var setSong = function(song) {
       if(currentBuzzObject) {
-        currentBuzzObject.stop();
-        SongPlayer.currentSong.playing = null;
+        stopSong(song);
       }
 
-    currentBuzzObject = new buzz.sound(song.audioUrl, {
-      formats: ['mp3'],
-      preload: true
-    });
+      currentBuzzObject = new buzz.sound(song.audioUrl, {
+        formats: ['mp3'],
+        preload: true
+      });
 
-    SongPlayer.currentSong = song;
-      }
+      SongPlayer.currentSong = song;
+    };
+
+    /**
+    * @function stopSong
+    * @desc Stops currently playing song and sets .playing to null
+    * @param {Object} song
+    */
+
+    var stopSong = function(song) {
+      currentBuzzObject.stop();
+      SongPlayer.currentSong.playing = null;
+    };
 
     /**
     * @function playSong
@@ -97,7 +107,7 @@
 
     /**
     * @function SongPlayer.previous
-    * @desc Gets the current song index and subtracts 1 to get the previous song
+    * @desc Gets the current song index and subtracts 1 to get and play the previous song
     */
 
     SongPlayer.previous = function() {
@@ -105,8 +115,25 @@
       currentSongIndex--;
 
       if(currentSongIndex < 0) {
-        currentBuzzObject.stop();
-        SongPlayer.currentSong.playing = null;
+        stopSong();
+      } else {
+        var song = currentAlbum.songs[currentSongIndex];
+        setSong(song);
+        playSong(song);
+      }
+    };
+
+    /**
+    * @function SongPlayer.next
+    * @desc Gets the current song index and adds 1 to get and play the next song
+    */
+
+    SongPlayer.next = function() {
+      var currentSongIndex = getSongIndex(SongPlayer.currentSong);
+      currentSongIndex++;
+
+      if(currentSongIndex > currentAlbum.songs.length - 1) {
+        stopSong();
       } else {
         var song = currentAlbum.songs[currentSongIndex];
         setSong(song);
