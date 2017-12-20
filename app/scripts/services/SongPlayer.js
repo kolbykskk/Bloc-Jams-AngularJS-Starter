@@ -61,6 +61,7 @@
 
     var playSong = function(song) {
       currentBuzzObject.play();
+      currentBuzzObject.setVolume(SongPlayer.volume);
       SongPlayer.currentSong.playing = true;
     }
 
@@ -80,6 +81,17 @@
      */
 
     SongPlayer.currentSong = null;
+
+    SongPlayer.volume = null;
+
+    SongPlayer.setVolume = function(volume) {
+      if(currentBuzzObject) {
+        currentBuzzObject.setVolume(volume);
+        SongPlayer.volume = volume;
+      } else {
+        SongPlayer.volume = volume;
+      }
+    };
 
     /**
      * @desc Current playback time (in seconds) of currently playing song
